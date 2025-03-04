@@ -19,4 +19,12 @@ router.post('/register', [
     .withMessage('Password must be at least 8 characters')
 ], adminController.registerAdmin);
 
+
+
+
+router.post('/login', [
+    body('email').isEmail().withMessage('Invalid email format'),
+    body('password').notEmpty().withMessage('Password is required')
+], adminController.loginAdmin);
+
 module.exports = router;

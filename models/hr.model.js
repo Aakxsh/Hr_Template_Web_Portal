@@ -67,3 +67,37 @@ HrSchema.methods.generateAuthToken = function () {
 
 const Hr = mongoose.model('Hr', HrSchema);
 module.exports = Hr;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
