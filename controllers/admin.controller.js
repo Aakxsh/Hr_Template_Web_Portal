@@ -1,7 +1,5 @@
-const Admin = require('../models/Admin.model');
-const { validationResult } = require('express-validator');
 
-// Register Admin
+// Register Admin - Allow only 1 admin
 exports.registerAdmin = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
@@ -9,6 +7,11 @@ exports.registerAdmin = async (req, res) => {
     const { fullname, email, password } = req.body;
 
     try {
+        const existingAdmin = await Admin.findOne({});
+        if (existingAdmin) {
+            return res.status(403).json({ message: 'Admin already exists. Only 1 admin is allowed.' });
+        }
+
         const admin = new Admin({ fullname, email, password });
         await admin.save();
 
@@ -19,15 +22,23 @@ exports.registerAdmin = async (req, res) => {
     }
 };
 
-// Admin Login
+
+
+
+
+
 exports.loginAdmin = async (req, res) => {
     const { email, password } = req.body;
+
     const admin = await Admin.findOne({ email }).select('+password');
+
     if (!admin) return res.status(404).json({ message: 'Invalid email or password' });
 
     const isMatch = await admin.comparePassword(password);
+
     if (!isMatch) return res.status(400).json({ message: 'Invalid email or password' });
 
     const token = admin.generateAuthToken();
+
     res.json({ token, admin });
 };
